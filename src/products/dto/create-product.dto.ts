@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateProductDto {

@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from '../entities/product.entity';
+import { JwtUser } from '../types/jwt-user.interface';
 
 @Injectable()
 export class ProductsService {
@@ -42,7 +42,7 @@ export class ProductsService {
     return this.productRepository.find({ where: { store: { id: userId } } });
   }
 
-  async findOneProtected(id: number, user: any) {
+  async findOneProtected(id: number, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (user.role !== 'admin' && product.store.id !== user.userId) {
@@ -51,7 +51,7 @@ export class ProductsService {
     return product;
   }
 
-  async updateProtected(id: number, data: Partial<Product>, user: any) {
+  async updateProtected(id: number, data: Partial<Product>, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (product.store.id !== user.userId) {
@@ -61,7 +61,7 @@ export class ProductsService {
     return this.findOne(id);
   }
 
-  async setActiveProtected(id: number, isActive: boolean, user: any) {
+  async setActiveProtected(id: number, isActive: boolean, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (product.store.id !== user.userId) {
@@ -71,7 +71,7 @@ export class ProductsService {
     return this.findOne(id);
   }
 
-  async removeProtected(id: number, user: any) {
+  async removeProtected(id: number, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (product.store.id !== user.userId) {

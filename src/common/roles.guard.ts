@@ -2,6 +2,12 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './roles.decorator';
 
+interface JwtUser {
+  userId: number;
+  email: string;
+  role: string;
+}
+
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -14,7 +20,7 @@ export class RolesGuard implements CanActivate {
     if (!requiredRoles) {
       return true;
     }
-    const { user } = context.switchToHttp().getRequest();
+    const { user }: { user: JwtUser } = context.switchToHttp().getRequest();
     if (!user || !requiredRoles.includes(user.role)) {
       throw new ForbiddenException('No tienes permisos para acceder a este recurso');
     }
