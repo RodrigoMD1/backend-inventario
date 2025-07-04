@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Controller, Get, Param, ParseIntPipe, Patch, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Roles } from '../common/roles.decorator';
 import { RolesGuard } from '../common/roles.guard';
@@ -20,13 +20,13 @@ export class UsersController {
 
   @Get(':id')
   @Roles('admin')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     return await this.usersService.findOne(id);
   }
 
   @Patch(':id/active')
   @Roles('admin')
-  async setActive(@Param('id', ParseIntPipe) id: number, @Body('isActive') isActive: boolean) {
+  async setActive(@Param('id') id: string, @Body('isActive') isActive: boolean) {
     return await this.usersService.setActive(id, isActive);
   }
 }

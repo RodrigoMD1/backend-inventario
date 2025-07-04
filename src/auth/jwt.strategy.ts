@@ -5,7 +5,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 export interface JwtPayload {
-  sub: number;
+  sub: string; // UUID
   email: string;
   role: string;
 }
@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: JwtPayload): { userId: number; email: string; role: string } {
+  validate(payload: JwtPayload): { userId: string; email: string; role: string } {
     return { userId: payload.sub, email: payload.email, role: payload.role };
   }
 }

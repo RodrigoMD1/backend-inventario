@@ -10,7 +10,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../common/roles.decorator';
 import { RolesGuard } from '../common/roles.guard';
 import { JwtUser } from '../types/jwt-user.interface';
-import { User } from 'src/entities/user.entity';
+import { User } from '../entities/user.entity';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,13 +24,13 @@ export class ProductsController {
     if (req.user.role === 'admin') {
       return this.productsService.findAll();
     } else {
-      return this.productsService.findByUser(req.user.userId);
+      return this.productsService.findByUser(String(req.user.userId));
     }
   }
 
   @Get(':id')
   @Roles('admin', 'store')
-  findOne(@Param('id', ParseIntPipe) id: number, @Req() req: { user: JwtUser }) {
+  findOne(@Param('id') id: string, @Req() req: { user: JwtUser }) {
     return this.productsService.findOneProtected(id, req.user);
   }
 
@@ -38,7 +38,7 @@ export class ProductsController {
   @Roles('store')
   create(@Body() data: CreateProductDto, @Req() req: { user: JwtUser }) {
     return this.productsService.create({ ...data, store: {
-        id: req.user.userId,
+        id: String(req.user.userId),
         name: '',
         isActive: false,
         user: new User,
@@ -49,19 +49,19 @@ export class ProductsController {
 
   @Put(':id')
   @Roles('store')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateProductDto, @Req() req: { user: JwtUser }) {
+  update(@Param('id') id: string, @Body() data: UpdateProductDto, @Req() req: { user: JwtUser }) {
     return this.productsService.updateProtected(id, data, req.user);
   }
 
   @Patch(':id/active')
   @Roles('store')
-  setActive(@Param('id', ParseIntPipe) id: number, @Body('isActive') isActive: boolean, @Req() req: { user: JwtUser }) {
+  setActive(@Param('id') id: string, @Body('isActive') isActive: boolean, @Req() req: { user: JwtUser }) {
     return this.productsService.setActiveProtected(id, isActive, req.user);
   }
 
   @Delete(':id')
   @Roles('store')
-  remove(@Param('id', ParseIntPipe) id: number, @Req() req: { user: JwtUser }) {
+  remove(@Param('id') id: string, @Req() req: { user: JwtUser }) {
     return this.productsService.removeProtected(id, req.user);
   }
 }

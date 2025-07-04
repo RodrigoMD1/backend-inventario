@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Store } from './store.entity';
+import { Payment } from './payment.entity';
 
 @Entity()
 export class Subscription {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   status: string; // active, inactive, cancelled
@@ -17,4 +18,7 @@ export class Subscription {
 
   @ManyToOne(() => Store, (store) => store.subscriptions)
   store: Store;
+
+  @OneToMany(() => Payment, (payment) => payment.subscription)
+  payments: Payment[];
 }

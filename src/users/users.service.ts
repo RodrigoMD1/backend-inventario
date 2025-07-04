@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 
 export interface UserList {
-  id: number;
+  id: string; // UUID
   email: string;
   role: string;
   isActive: boolean;
@@ -28,7 +28,7 @@ export class UsersService {
     });
   }
 
-  async findOne(id: number): Promise<UserList> {
+  async findOne(id: string): Promise<UserList> {
     const user = await this.userRepository.findOne({
       where: { id },
       select: [
@@ -39,7 +39,7 @@ export class UsersService {
     return user;
   }
 
-  async setActive(id: number, isActive: boolean): Promise<UserList> {
+  async setActive(id: string, isActive: boolean): Promise<UserList> {
     await this.userRepository.update(id, { isActive });
     return this.findOne(id);
   }

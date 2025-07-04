@@ -15,7 +15,7 @@ export class ProductsService {
     return this.productRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return this.productRepository.findOne({ where: { id } });
   }
 
@@ -24,25 +24,25 @@ export class ProductsService {
     return this.productRepository.save(product);
   }
 
-  async update(id: number, data: Partial<Product>) {
+  async update(id: string, data: Partial<Product>) {
     await this.productRepository.update(id, data);
     return this.findOne(id);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return this.productRepository.delete(id);
   }
 
-  async setActive(id: number, isActive: boolean) {
+  async setActive(id: string, isActive: boolean) {
     await this.productRepository.update(id, { isActive });
     return this.findOne(id);
   }
 
-  async findByUser(userId: number) {
+  async findByUser(userId: string) {
     return this.productRepository.find({ where: { store: { id: userId } } });
   }
 
-  async findOneProtected(id: number, user: JwtUser) {
+  async findOneProtected(id: string, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (user.role !== 'admin' && product.store.id !== user.userId) {
@@ -51,7 +51,7 @@ export class ProductsService {
     return product;
   }
 
-  async updateProtected(id: number, data: Partial<Product>, user: JwtUser) {
+  async updateProtected(id: string, data: Partial<Product>, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (product.store.id !== user.userId) {
@@ -61,7 +61,7 @@ export class ProductsService {
     return this.findOne(id);
   }
 
-  async setActiveProtected(id: number, isActive: boolean, user: JwtUser) {
+  async setActiveProtected(id: string, isActive: boolean, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (product.store.id !== user.userId) {
@@ -71,7 +71,7 @@ export class ProductsService {
     return this.findOne(id);
   }
 
-  async removeProtected(id: number, user: JwtUser) {
+  async removeProtected(id: string, user: JwtUser) {
     const product = await this.productRepository.findOne({ where: { id }, relations: ['store'] });
     if (!product) throw new NotFoundException('Producto no encontrado');
     if (product.store.id !== user.userId) {
