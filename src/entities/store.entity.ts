@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'ty
 import { User } from './user.entity';
 import { Product } from './product.entity';
 import { Subscription } from './subscription.entity';
+import { ApiKey } from './api-key.entity';
 
 @Entity()
 export class Store {
@@ -22,4 +23,7 @@ export class Store {
 
   @OneToMany(() => Subscription, (subscription) => subscription.store)
   subscriptions: Subscription[];
+
+  @OneToMany(() => ApiKey, (apiKey) => apiKey.store)
+  apiKeys: ApiKey[];
 }

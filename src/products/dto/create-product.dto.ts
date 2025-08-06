@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsBoolean, IsUUID } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -34,4 +34,8 @@ export class CreateProductDto {
   @IsString()
   @IsOptional()
   unit?: string;
+
+  @IsUUID('4', { message: 'storeId debe ser un UUID válido' })
+  @IsOptional()
+  storeId?: string;
 }
